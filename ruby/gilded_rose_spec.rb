@@ -12,8 +12,7 @@ describe GildedRose do
           it 'sell_in must be 9 and quality 1' do
             update_quality_of([aged_brie], days: 1)
 
-            expect(aged_brie.sell_in).to eq(9)
-            expect(aged_brie.quality).to eq(1)
+            expect(aged_brie.to_s).to eq('Aged Brie, 9, 1')
           end
         end
 
@@ -21,8 +20,7 @@ describe GildedRose do
           it 'sell_in and quality must be 5' do
             update_quality_of([aged_brie], days: 5)
 
-            expect(aged_brie.sell_in).to eq(5)
-            expect(aged_brie.quality).to eq(5)
+            expect(aged_brie.to_s).to eq('Aged Brie, 5, 5')
           end
         end
 
@@ -30,8 +28,7 @@ describe GildedRose do
           it 'sell_in must be 1 and quality 9' do
             update_quality_of([aged_brie], days: 9)
 
-            expect(aged_brie.sell_in).to eq(1)
-            expect(aged_brie.quality).to eq(9)
+            expect(aged_brie.to_s).to eq('Aged Brie, 1, 9')
           end
         end
 
@@ -41,17 +38,62 @@ describe GildedRose do
 
             expected_quality = sell_in + (5 * 2)
 
-            expect(aged_brie.sell_in).to eq(-5)
-            expect(aged_brie.quality).to eq(expected_quality)
+            expect(aged_brie.to_s).to eq("Aged Brie, -5, #{expected_quality}")
           end
         end
 
         context 'when sell by date has passed 60 days' do
-          it 'sell_in must be -5 and quality the maximum of 50' do
+          it 'sell_in must be -60 and quality the maximum of 50' do
             update_quality_of([aged_brie], days: sell_in + 60)
 
-            expect(aged_brie.sell_in).to eq(-60)
-            expect(aged_brie.quality).to eq(50)
+            expect(aged_brie.to_s).to eq('Aged Brie, -60, 50')
+          end
+        end
+      end
+    end
+
+    context 'when name is Conjured Mana Cake' do
+      context 'with sell_in 10' do
+        let(:sell_in) { 3 }
+        let(:conjured_cake) { Item.new('Conjured Mana Cake', sell_in, 6) }
+
+        context 'when passed 1 day' do
+          it 'sell_in must be 2 and quality 5' do
+            update_quality_of([conjured_cake], days: 1)
+
+            expect(conjured_cake.to_s).to eq('Conjured Mana Cake, 2, 5')
+          end
+        end
+
+        context 'when passed 5 days' do
+          it 'sell_in must be -2 and quality 1' do
+            update_quality_of([conjured_cake], days: 5)
+
+            expect(conjured_cake.to_s).to eq('Conjured Mana Cake, -2, 1')
+          end
+        end
+
+        context 'when passed 9 days' do
+          it 'sell_in must be -6 and quality 0' do
+            update_quality_of([conjured_cake], days: 9)
+
+            expect(conjured_cake.to_s).to eq('Conjured Mana Cake, -6, 0')
+          end
+        end
+
+        context 'when sell by date has passed 5 days' do
+          it 'sell_in must be -5 and quality 0' do
+            update_quality_of([conjured_cake], days: sell_in + 5)
+
+            expect(conjured_cake.to_s).to eq("Conjured Mana Cake, -5, 0")
+          end
+        end
+
+        context 'when sell by date has passed 60 days' do
+          it 'sell_in must be -60 and quality the minimum of 0' do
+            update_quality_of([conjured_cake], days: sell_in + 60)
+
+            expect(conjured_cake.to_s).to eq('Conjured Mana Cake, -60, 0')
           end
         end
       end
@@ -65,8 +107,7 @@ describe GildedRose do
           it 'sell_in must be 0 and quality 80' do
             update_quality_of([sulfuras], days: 1)
 
-            expect(sulfuras.sell_in).to eq(0)
-            expect(sulfuras.quality).to eq(80)
+            expect(sulfuras.to_s).to eq('Sulfuras, Hand of Ragnaros, 0, 80')
           end
         end
 
@@ -74,8 +115,7 @@ describe GildedRose do
           it 'sell_in must be 0 and quality 80' do
             update_quality_of([sulfuras], days: 5)
 
-            expect(sulfuras.sell_in).to eq(0)
-            expect(sulfuras.quality).to eq(80)
+            expect(sulfuras.to_s).to eq('Sulfuras, Hand of Ragnaros, 0, 80')
           end
         end
 
@@ -83,8 +123,7 @@ describe GildedRose do
           it 'sell_in must be 0 and quality 80' do
             update_quality_of([sulfuras], days: 9)
 
-            expect(sulfuras.sell_in).to eq(0)
-            expect(sulfuras.quality).to eq(80)
+            expect(sulfuras.to_s).to eq('Sulfuras, Hand of Ragnaros, 0, 80')
           end
         end
       end
@@ -99,8 +138,7 @@ describe GildedRose do
           it 'sell_in must be 14 and quality 21' do
             update_quality_of([backstage], days: 1)
 
-            expect(backstage.sell_in).to eq(14)
-            expect(backstage.quality).to eq(21)
+            expect(backstage.to_s).to eq('Backstage passes to a TAFKAL80ETC concert, 14, 21')
           end
         end
 
@@ -108,8 +146,7 @@ describe GildedRose do
           it 'sell_in must be 10 and quality 25' do
             update_quality_of([backstage], days: 5)
 
-            expect(backstage.sell_in).to eq(10)
-            expect(backstage.quality).to eq(25)
+            expect(backstage.to_s).to eq('Backstage passes to a TAFKAL80ETC concert, 10, 25')
           end
         end
 
@@ -117,17 +154,15 @@ describe GildedRose do
           it 'sell_in must be 6 and quality 33' do
             update_quality_of([backstage], days: 9)
 
-            expect(backstage.sell_in).to eq(6)
-            expect(backstage.quality).to eq(33)
+            expect(backstage.to_s).to eq('Backstage passes to a TAFKAL80ETC concert, 6, 33')
           end
         end
 
         context 'when passed 13 days' do
-          it 'sell_in must be 6 and quality 33' do
+          it 'sell_in must be 2 and quality 44' do
             update_quality_of([backstage], days: 13)
 
-            expect(backstage.sell_in).to eq(2)
-            expect(backstage.quality).to eq(44)
+            expect(backstage.to_s).to eq('Backstage passes to a TAFKAL80ETC concert, 2, 44')
           end
         end
 
@@ -135,8 +170,7 @@ describe GildedRose do
           it 'sell_in must be -7 and quality 0' do
             update_quality_of([backstage], days: sell_in + 7)
 
-            expect(backstage.sell_in).to eq(-7)
-            expect(backstage.quality).to eq(0)
+            expect(backstage.to_s).to eq('Backstage passes to a TAFKAL80ETC concert, -7, 0')
           end
         end
       end
