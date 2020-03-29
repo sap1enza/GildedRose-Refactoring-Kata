@@ -1,66 +1,58 @@
 class GildedRose
+  KLASS = {
+    'Aged Brie' => 'AgedBrie',
+    'Sulfuras, Hand of Ragnaros' => 'Sulfuras',
+    'Backstage passes to a TAFKAL80ETC concert' => 'Backstage',
+  }.freeze
 
   def initialize(items)
     @items = items
   end
 
-  def update_quality()
-    @items.each do |item|
+  def update_quality
+    @items.each { |item| ItemUpdater.const_get(KLASS[item.name] || 'Common').update(item) }
+  end
+end
 
-      case item.name
-      when 'Aged Brie'
-        update_aged_brie(item)
-      when 'Sulfuras, Hand of Ragnaros'
-        update_sulfuras(item)
-      when 'Backstage passes to a TAFKAL80ETC concert'
-        update_backstage(item)
-      else
-        update_common(item)
-      end
-
+module ItemUpdater
+  class Base
+    def self.update(item)
+      item.sell_in -= 1
     end
   end
 
-  def update_common(item)
-    item.sell_in -= 1
+  class Common < Base
+    def self.update(item)
+      super
 
-    return if item.quality == 0
-
-    item.quality -=1
+      item.quality -=1 if item.quality > 0
+    end
   end
 
-  def update_aged_brie(item)
-    item.sell_in -= 1
+  class AgedBrie < Base
+    def self.update(item)
+      super
 
-    return unless item.quality < 50
+      return if item.quality == 50
+      return item.quality += 2 if item.sell_in < 0
 
-    if item.sell_in < 0
-      item.quality += 2
-    else
       item.quality +=1
     end
   end
 
-  def update_sulfuras(item)
+  class Sulfuras < Base
+    def self.update(item); end
   end
 
-  def update_backstage(item)
-    item.sell_in -= 1
+  class Backstage < Base
+    def self.update(item)
+      super
 
-    if item.sell_in < 0
-      item.quality = 0
-
-      return
-    end
-
-    if item.sell_in < 5
-      item.quality += 3
-    elsif item.sell_in < 10
-      item.quality += 2
-    else
+      return item.quality = 0 if item.sell_in < 0
+      return item.quality +=3 if item.sell_in <= 5
+      return item.quality +=2 if item.sell_in <= 10
       item.quality += 1
     end
-
   end
 end
 

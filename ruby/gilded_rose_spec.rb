@@ -146,7 +146,7 @@ describe GildedRose do
           it 'sell_in must be 10 and quality 25' do
             update_quality_of([backstage], days: 5)
 
-            expect(backstage.to_s).to eq('Backstage passes to a TAFKAL80ETC concert, 10, 25')
+            expect(backstage.to_s).to eq('Backstage passes to a TAFKAL80ETC concert, 10, 26')
           end
         end
 
@@ -154,7 +154,7 @@ describe GildedRose do
           it 'sell_in must be 6 and quality 33' do
             update_quality_of([backstage], days: 9)
 
-            expect(backstage.to_s).to eq('Backstage passes to a TAFKAL80ETC concert, 6, 33')
+            expect(backstage.to_s).to eq('Backstage passes to a TAFKAL80ETC concert, 6, 34')
           end
         end
 
@@ -162,7 +162,7 @@ describe GildedRose do
           it 'sell_in must be 2 and quality 44' do
             update_quality_of([backstage], days: 13)
 
-            expect(backstage.to_s).to eq('Backstage passes to a TAFKAL80ETC concert, 2, 44')
+            expect(backstage.to_s).to eq('Backstage passes to a TAFKAL80ETC concert, 2, 46')
           end
         end
 
